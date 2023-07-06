@@ -1,5 +1,31 @@
 //your JS code here.
 
+let userAnswers=JSON.parse(sessionStorage.getItem('progress')) || [];
+
+let submitBtn=document.getElementById('submit');
+
+submitBtn.addEventListener('click',()=>{
+  console.log(questions);
+let score=0;
+  questions.forEach((question)=>{
+    if(userAnswers && userAnswers.includes(question.answer)){
+      score++;
+    }
+  })
+localStorage.setItem('score',JSON.stringify(score));
+  document.getElementById('score').innerText=`Your score is ${score} out of 5.`
+})
+
+function saveDetails(event){
+// console.log(event.target.value);
+let option=event.target.value;
+if(userAnswers.indexOf(option)===-1){
+  userAnswers.push(option);
+  sessionStorage.setItem('progress',JSON.stringify(userAnswers));
+}
+}
+
+const questionsElement=document.getElementById('questions');
 // Do not change code below this line
 // This code will just display the questions to the screen
 const questions = [
@@ -43,7 +69,9 @@ function renderQuestions() {
       choiceElement.setAttribute("type", "radio");
       choiceElement.setAttribute("name", `question-${i}`);
       choiceElement.setAttribute("value", choice);
-      if (userAnswers[i] === choice) {
+      choiceElement.addEventListener('change',saveDetails);
+      // if (userAnswers[i] === choice) {
+      if (userAnswers.includes(choice)) {
         choiceElement.setAttribute("checked", true);
       }
       const choiceText = document.createTextNode(choice);
